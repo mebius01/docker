@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+
+  # MySQL
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DB: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - ${MYSQL_PORT}:${MYSQL_PORT}
+    volumes:
+      - mysql:/var/lib/mysql/data
+
+  # PostreSQL
+  pg:
+  image: postgres:15.2-alpine
+  restart: always
+  environment:
+    POSTGRES_HOST: ${POSTGRES_HOST}
+    POSTGRES_DB: ${POSTGRES_DB}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  ports:
+    - ${POSTGRES_PORT}:${POSTGRES_PORT}
+  volumes:
+    - pg:/var/lib/postgresql/data
+
+  # Redis
+  redis:
+    image: redis:latest
+    restart: always
+    command: >
+      --requirepass ${REDIS_PASSWORD}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    volumes:
+      - redis:/var/lib/redis/data
+
+volumes:
+  mysql:
+    driver: local
+  pg:
+    driver: local
+  redis:
+    driver: local
